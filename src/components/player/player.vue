@@ -71,7 +71,7 @@
               <i class="icon-next" @click="next"></i>
             </div>
             <div class="icon i-right">
-              <i class="icon icon-not-favorite"></i>
+              <i class="icon" :class="getFavouriteIcon(currentSong)" @click="favourSong(currentSong)"></i>
             </div>
           </div>
         </div>
@@ -169,6 +169,7 @@
       open() {
         this.setFullScreen(true)
       },
+
       // vue提供的钩子动画
       enter(el, done) {
         const {x, y, scale} = this._getPosAndScale()
@@ -201,19 +202,6 @@
       afterLeave() {
         this.$refs.cdWrapper.style.transition = ''
         this.$refs.cdWrapper.style[transform] = ''
-      },
-      _getPosAndScale() {
-        const targetWidth = 40                                // 小图片宽度
-        const paddingLeft = 40                                // 小图片
-        const paddingBottom = 30                              // 小图片
-        const paddingTop = 80                                 // 大图片
-        const width = window.innerWidth * 0.8                 // 大图片
-        const scale = targetWidth / width
-        const x = -(window.innerWidth / 2 - paddingLeft)      // 以大图中心为起点
-        const y = window.innerHeight - paddingTop - width / 2 - paddingBottom
-        return {
-          x, y, scale
-        }
       },
       togglePlaying() {
         if (!this.songReady) return
@@ -360,6 +348,22 @@
       showPlaylist() {
         this.$refs.playlist.showPlaylist()
       },
+
+      // 获取大小光碟动画所需要的参数
+      _getPosAndScale() {
+        const targetWidth = 40                                // 小图片宽度
+        const paddingLeft = 40                                // 小图片
+        const paddingBottom = 30                              // 小图片
+        const paddingTop = 80                                 // 大图片
+        const width = window.innerWidth * 0.8                 // 大图片
+        const scale = targetWidth / width
+        const x = -(window.innerWidth / 2 - paddingLeft)      // 以大图中心为起点
+        const y = window.innerHeight - paddingTop - width / 2 - paddingBottom
+        return {
+          x, y, scale
+        }
+      },
+
       // 质朴长存法,时间换空间  相当于es6的 padStart()字符串补全长度
       _timePad(num, n) {
         let len = num.toString().length
@@ -390,10 +394,11 @@
         }
         // 快速点击时，由于getLyric()是异步获取的，DOM更新完成后调用
         // TODO 可能有bug
-        this.$nextTick(() => {
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
           this.$refs.audio.play()
           this.getLyric()
-        })
+        }, 800)
       },
       playing(playingState) {
         const audio = this.$refs.audio

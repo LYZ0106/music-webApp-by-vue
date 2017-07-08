@@ -31,7 +31,7 @@ export const playListMixin = {
   }
 }
 
-// 播放模式共享
+// 播放器共享
 export const playerMixin = {
   computed: {
     iconMode() {
@@ -40,7 +40,8 @@ export const playerMixin = {
     ...mapGetters([
       'currentSong',
       'sequenceList',
-      'mode'
+      'mode',
+      'favouriteSong'
     ])
   },
   methods: {
@@ -63,16 +64,38 @@ export const playerMixin = {
       })
       this.setCurrentIndex(index)
     },
+    getFavouriteIcon(song) {
+      return this.isFavour(song) ? 'icon-favorite' : 'icon-not-favorite'
+    },
+    favourSong(song) {
+      if (this.isFavour(song)) {
+        this.cancelFavouriteSong(song)
+      } else {
+        this.saveFavouriteSong(song)
+      }
+    },
+    isFavour(song) {
+      const index = this.favouriteSong.findIndex((item) => {
+        return item.id === song.id
+      })
+
+      // 转化为布尔值判断
+      return index > -1
+    },
     ...mapMutations({
       setCurrentIndex: 'SET_CURRENT_INDEX',
       setPlayMode: 'SET_PLAY_MODE',
       setPlaylist: 'SET_PLAYLIST',
       setPlayingState: 'SET_PLAYING_STATE'
-    })
+    }),
+    ...mapActions([
+      'saveFavouriteSong',
+      'cancelFavouriteSong'
+    ])
   }
 }
 
-// 搜索内容历史储存
+// 搜索内容历史本地储存
 // 这里必须指定 ref="searchBox"
 export const searchMixin = {
   data() {

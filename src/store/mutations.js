@@ -38,6 +38,9 @@ const mutations = {
   },
   [types.SET_PLAY_HISTORY](state, history) {
     state.playHistory = history
+  },
+  [types.SET_FAVOURITE_SONG](state, song) {
+    state.favouriteSong = song
   }
 }
 

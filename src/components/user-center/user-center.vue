@@ -1,29 +1,29 @@
 <template>
   <transition name="slide">
-    <div class="user-center">
+    <div class="user-center" ref="userCenter">
       <div class="back" @click="back">
         <i class="icon-back"></i>
       </div>
       <div class="switches-wrapper">
-
+        <switches :currentIndex="currentIndex" @switch="switchItem" :switchesText="switchesText"></switches>
       </div>
       <div class="play-btn">
         <i class="icon-play"></i>
         <span class="text">随机播放全部</span>
       </div>
       <div class="list-wrapper">
-        <div  class="list-scroll" >
+        <scroll class="list-scroll" v-if="currentIndex===0">
           <div class="list-inner">
-            <div ></div>
+            <div></div>
           </div>
-        </div>
-        <div  class="list-scroll" >
+        </scroll>
+        <scroll class="list-scroll" :data="playHistory">
           <div class="list-inner">
-
+            <song-list :songs="playHistory" @select="selectSong"></song-list>
           </div>
-        </div>
+        </scroll>
       </div>
-      <div class="no-result-wrapper" v-show="noResult">
+      <div class="no-result-wrapper">
 
       </div>
     </div>
@@ -32,24 +32,47 @@
 
 <script type="text/ecmascript-6">
   import {mapGetters, mapActions} from 'vuex'
+  import Switches from 'base/switches/switches'
+  import SongList from 'base/song-list/song-list'
+  import Scroll from 'base/scroll/scroll'
+  import {playListMixin} from 'common/js/mixin'
 
   export default {
+    mixins: [playListMixin],
     data() {
       return {
+        currentIndex: 0
       }
     },
     computed: {
+      switchesText() {
+        return ['我最爱的', '最近播放']
+      },
       ...mapGetters([
+        'playHistory'
       ])
     },
     methods: {
       back() {
-
+        this.$router.back()
+      },
+      switchItem(index) {
+        this.currentIndex = index
+      },
+      selectSong(item) {
+        this.insertSong(item)
+      },
+      handlePlaylist(playlist) {
+        this.$refs.userCenter.style.bottom = playlist.length > 0 ? 60 + 'px' : 0
       },
       ...mapActions([
+        'insertSong'
       ])
     },
     components: {
+      Switches,
+      SongList,
+      Scroll
     }
   }
 </script>

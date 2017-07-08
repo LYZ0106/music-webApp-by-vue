@@ -1,5 +1,5 @@
 import {playMode} from 'common/js/config'
-import {initSaveSearch, initSavePlay} from 'common/js/cache'
+import {initSaveSearch, initSavePlay, initFavouriteSong} from 'common/js/cache'
 
 const state = {
   // 歌手状态管理
@@ -34,7 +34,10 @@ const state = {
   searchHistory: initSaveSearch(),
 
   // 播放历史
-  playHistory: initSavePlay()
+  playHistory: initSavePlay(),
+
+  // 喜欢的歌曲
+  favouriteSong: initFavouriteSong()
 }
 
 export default state
