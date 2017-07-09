@@ -11,7 +11,6 @@ export const playListMixin = {
   },
   // dom 中组件渲染完成后挂载
   mounted() {
-    // TODO 为什么要传入this.playlist
     this.handlePlaylist(this.playlist)
   },
   // 内置组件 keep-alive activated 生命周期钩子函数将会被对应执

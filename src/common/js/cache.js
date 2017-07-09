@@ -68,7 +68,7 @@ export function initSavePlay() {
 export function savePlay(song) {
   let getters = storage.get(PLAY_KEY, [])
   insertArr(song, getters, (item) => {
-    return item === song
+    return song.id === item.id
   }, MAX_PLAY_NUM)
   storage.set(PLAY_KEY, getters)
   return getters

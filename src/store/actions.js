@@ -29,6 +29,7 @@ export const selectPlay = function ({commit, state}, {list, index}) {
 }
 
 // 乱序播放
+// {list}解构赋值将值从数组或属性从对象提取到不同的变量中,从作为函数实参的对象中提取数据
 export const randomPlay = function ({commit}, {list}) {
   commit(types.SET_PLAY_MODE, playMode.random)
   commit(types.SET_SEQUENCE_LIST, list)

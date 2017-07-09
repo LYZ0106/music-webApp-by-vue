@@ -7,17 +7,17 @@
       <div class="switches-wrapper">
         <switches :currentIndex="currentIndex" @switch="switchItem" :switchesText="switchesText"></switches>
       </div>
-      <div class="play-btn">
+      <div class="play-btn" @click="random">
         <i class="icon-play"></i>
         <span class="text">随机播放全部</span>
       </div>
       <div class="list-wrapper">
-        <scroll class="list-scroll" v-if="currentIndex===0">
+        <scroll ref="scrollL" class="list-scroll" v-if="currentIndex===0" :data="favouriteSong">
           <div class="list-inner">
-            <div></div>
+            <song-list :songs="favouriteSong" @select="selectSong"></song-list>
           </div>
         </scroll>
-        <scroll class="list-scroll" :data="playHistory">
+        <scroll ref="scrollR" class="list-scroll" v-else :data="playHistory">
           <div class="list-inner">
             <song-list :songs="playHistory" @select="selectSong"></song-list>
           </div>
@@ -34,6 +34,7 @@
   import {mapGetters, mapActions} from 'vuex'
   import Switches from 'base/switches/switches'
   import SongList from 'base/song-list/song-list'
+  import Song from 'common/js/song'
   import Scroll from 'base/scroll/scroll'
   import {playListMixin} from 'common/js/mixin'
 
@@ -49,7 +50,8 @@
         return ['我最爱的', '最近播放']
       },
       ...mapGetters([
-        'playHistory'
+        'playHistory',
+        'favouriteSong'
       ])
     },
     methods: {
@@ -60,13 +62,31 @@
         this.currentIndex = index
       },
       selectSong(item) {
-        this.insertSong(item)
+        // 需要实例化 song的实例才具有getLyric方法
+        this.insertSong(new Song(item))
       },
       handlePlaylist(playlist) {
         this.$refs.userCenter.style.bottom = playlist.length > 0 ? 60 + 'px' : 0
+        this.$refs.scrollL && this.$refs.scrollL.refresh()
+        this.$refs.scrollR && this.$refs.scrollR.refresh()
+      },
+
+      // TODO bug 切换页面播放时 key 冲突
+      random() {
+        let list = this.currentIndex === 0 ? this.favouriteSong : this.playHistory
+        if (list.length === 0) {
+          return
+        }
+
+        // TODO 为什么不能  let lists
+        list = list.map((song) => { // map() 方法创建一个新数组，
+          return new Song(song)
+        })
+        this.randomPlay({list})
       },
       ...mapActions([
-        'insertSong'
+        'insertSong',
+        'randomPlay'
       ])
     },
     components: {

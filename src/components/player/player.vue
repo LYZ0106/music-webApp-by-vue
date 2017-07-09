@@ -100,7 +100,7 @@
     <audio ref="audio"
            :src="currentSong.url"
            @timeupdate="updateTime"
-           @canplay="ready"
+           @play="ready"
            @ended="end"
            @error="error">
     </audio>
@@ -130,9 +130,11 @@
         currentTime: 0,
         radius: 32,
         currentLyric: null,
-        currentLineNum: 0,     // 当前所在歌词的行
+
+        // 当前所在歌词的行
+        currentLineNum: 0,
         currentShow: 'cd',
-        playingLyric: null
+        playingLyric: ''
       }
     },
     created() {
@@ -213,6 +215,7 @@
         if (!this.songReady) return
         if (this.playlist.length === 1) {
           this.loop()
+          return
         } else {
           let index = this.currentIndex - 1
           if (index === -1) index = this.playlist.length - 1
@@ -225,8 +228,11 @@
         if (!this.songReady) return
         if (this.playlist.length === 1) {
           this.loop()
+          // 当只有一首歌时 ，解决按钮全部操作不了
+          return
         } else {
           let index = this.currentIndex + 1
+          // 没有歌曲的时候
           if (index === this.playlist.length) index = 0
           this.setCurrentIndex(index)
           if (!this.playing) this.togglePlaying()
@@ -234,8 +240,10 @@
         this.songReady = false
       },
       loop() {
-        this.currentSong.currentTime = 0
+        // 重置该播放器的播放时长为0
+        this.$refs.audio.currentTime = 0
         this.$refs.audio.play()
+        this.setPlayingState(true)
         if (this.currentLyric) {
           this.currentLyric.seek(0)
         }
@@ -280,7 +288,7 @@
           if (this.playing) this.currentLyric.play()
         }).catch(() => {
           this.currentLyric = null
-          this.playingLyric = null
+          this.playingLyric = ''
           this.currentLineNum = 0
         })
       },
@@ -393,8 +401,9 @@
           this.currentLineNum = 0
         }
         // 快速点击时，由于getLyric()是异步获取的，DOM更新完成后调用
-        // TODO 可能有bug
         clearTimeout(this.timer)
+
+        // 1.防止用户过快的切换歌曲，2.在手机端进入后台任然可以播放
         this.timer = setTimeout(() => {
           this.$refs.audio.play()
           this.getLyric()
