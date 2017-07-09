@@ -20,8 +20,8 @@
                 v-for="(item, index) in sequenceList">
               <i class="current" :class="getCurrentCls(item)"></i>
               <span class="text">{{item.name}}</span>
-              <span class="like">
-                <i class="icon-no-favorite"></i>
+              <span class="like" @click.stop="favourSong(item)">
+                <i :class="getFavouriteIcon(item)"></i>
               </span>
               <span class="delete" @click.stop="deleteOne(item)">
                 <i class="icon-delete"></i>
