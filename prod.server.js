@@ -5,6 +5,8 @@ var express = require('express')
 var config = require('./config/index.js')
 
 var axios = require('axios')
+// nginx代理允许跨域
+axios.defaults.withCredentials = true
 
 var app = express()
 
