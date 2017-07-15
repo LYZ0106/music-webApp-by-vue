@@ -16,8 +16,8 @@ export function hasClass(el, className) {
 
 /*
  * 获取 data- 属性
- * el dom对象
- * val 有值时set，无值时get
+ * @param {string} el dom对象
+ * @param｛string｝ val 有值时set，无值时get
  */
 export function getData(el, name, val) {
   const prefix = `data-`
@@ -35,14 +35,20 @@ let vendor = (() => {
     ms: 'msTransform',
     standard: 'transform'
   }
+
+  // for...in 遍历（当前对象及其原型上的）每一个属性名称,而 for...of遍历（当前对象上的）每一个属性值:
   for (let key in transformNames) {
-    if (elementStyle[transformNames[key]] !== undefined) return key
+    if (transformNames.hasOwnProperty(key)) {
+      if (typeof elementStyle[transformNames[key]] !== 'undefined') {
+        return key
+      }
+    }
   }
   return false
 })()
 
 export function preStyle(style) {
-  if (vendor === false) return false
+  if (!vendor) return false
   if (vendor === 'standard') return style
   return vendor + style.charAt(0).toUpperCase() + style.substr(1)
 }
