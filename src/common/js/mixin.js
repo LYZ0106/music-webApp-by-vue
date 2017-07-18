@@ -123,7 +123,8 @@ export const searchMixin = {
     deleteSearch(item) {
       this.deleteSearchHistory(item)
     },
-    blurInput() { // TODO ios滚动时手机收起键盘好像不行
+    blurInput() {
+      // ios滚动时手机收起键盘
       this.$refs.searchBox.blur()
     },
     ...mapActions([

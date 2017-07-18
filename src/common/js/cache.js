@@ -5,6 +5,7 @@
 import storage from 'good-storage'
 
 function insertArr(val, arr, valCopy, maxNum) {
+  // valCopy是一个回调函数
   let index = arr.findIndex(valCopy)
   if (index === 0) return
 
