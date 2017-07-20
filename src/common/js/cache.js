@@ -39,6 +39,7 @@ export function saveSearch(query) {
   insertArr(query, getters, (item) => {
     return item === query     // 相当于query的副本
   }, MAX_SEARCH_NUM)
+  // 因为使用的是同一个key值，进行写入时会覆盖之前的， 所以渲染时再次存储刚刚拿到的数据，避免丢失之前的额数据
   storage.set(SEARCH_KEY, getters)
   return getters
 }
