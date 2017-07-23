@@ -3,6 +3,9 @@ var webpack = require('webpack')
 var config = require('../config')
 var merge = require('webpack-merge')
 var baseWebpackConfig = require('./webpack.base.conf')
+
+// 该插件可以生成一个HTML5文件，它可以动态添加script标签加载webpack生成包。
+// 如果生成包带hash值，那么，就必须用这个插件了。
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
