@@ -23,6 +23,8 @@ function param(data) {
   let url = ''
   for (let i in data) {
     let value = data[i] !== undefined ? data[i] : ''
+
+    // encodeURIComponent 转义除了字母、数字、(、)、.、!、~、*、'、-和_之外的所有字符。
     url += `&${i}=${encodeURIComponent(value)}`
   }
   return url
