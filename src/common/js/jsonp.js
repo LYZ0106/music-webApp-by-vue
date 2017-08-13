@@ -27,5 +27,5 @@ function param(data) {
     // encodeURIComponent 转义除了字母、数字、(、)、.、!、~、*、'、-和_之外的所有字符。
     url += `&${i}=${encodeURIComponent(value)}`
   }
-  return url.slice(1)  //去掉首个 &
+  return url.slice(1)  // 去掉首个 &
 }
